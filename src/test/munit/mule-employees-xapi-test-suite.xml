@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:munit="http://www.mulesoft.org/schema/mule/munit" xmlns:munit-tools="http://www.mulesoft.org/schema/mule/munit-tools"
+	xmlns="http://www.mulesoft.org/schema/mule/core" xmlns:doc="http://www.mulesoft.org/schema/mule/documentation"
+	xsi:schemaLocation="
+		http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+		http://www.mulesoft.org/schema/mule/munit http://www.mulesoft.org/schema/mule/munit/current/mule-munit.xsd
+		http://www.mulesoft.org/schema/mule/munit-tools  http://www.mulesoft.org/schema/mule/munit-tools/current/mule-munit-tools.xsd">
+	<munit:config name="mule-employees-xapi-test-suite.xml" />
+	<munit:test name="mule-employees-xapi-test-suite-mule-employees-xapi-bad-request-mainTest" doc:id="6135867f-b9a9-411c-8ebf-34f9acaaaee9" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="a7cd3e01-fd3e-4860-a52a-f88a2d3664a1" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="mule-employees-xapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:BAD_REQUEST" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<try doc:name="Try" doc:id="9882630b-fb33-4848-924e-6d64d7e74dae" >
+				<flow-ref doc:name="Flow-ref to mule-employees-xapi-main" doc:id="6a03eecb-e7f0-4413-a860-ab1245be7c1f" name="mule-employees-xapi-main" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="c63b536a-b64d-499f-9d82-77bfa9b62cbb" >
+						<logger level="INFO" doc:name="Logger" doc:id="5207946b-42f4-4f3b-84d1-9485ccbb7e14" message="Error happened"/>
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="5f6ca80d-6cc8-468e-932b-380fa8083a49" actual="#[payload.message]" expected='#["Bad request"]' message="The payload message is invalid"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="mule-employees-xapi-test-suite-mule-employees-xapi-not-found-mainTest" doc:id="8081ebf9-9539-43fe-a9cc-c179e4156368" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="a7e1e8be-f1eb-4cfc-9e95-e0771b800cd8" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="mule-employees-xapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:NOT_FOUND" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<try doc:name="Try" doc:id="deb2c786-2b73-420f-800e-68b892d9219d" >
+				<flow-ref doc:name="Flow-ref to mule-employees-xapi-main" doc:id="4ae9a048-89cb-4c4e-b61f-7b0a23313865" name="mule-employees-xapi-main" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="fa6a8d5d-ab94-4ccd-8281-f3a4dac8be83" >
+						<logger level="INFO" doc:name="Logger" doc:id="9eb24b6f-f9af-4fe1-9425-8bbf889d5001" message="Error happened"/>
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="b4eda882-789a-41a3-b25b-b1606f003a75" actual="#[payload.message]" expected='#["Resource not found"]' message="The payload message is invalid"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="mule-employees-xapi-test-suite-mule-employees-xapi-method-not-allowed-mainTest" doc:id="b4fda3cd-9a0b-41bb-adf7-6fc200e3afcd" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="1457ba1c-a5b4-4c6f-be17-a0879ef21eae" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="mule-employees-xapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:METHOD_NOT_ALLOWED" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<try doc:name="Try" doc:id="8162b2e4-128d-41fd-9ef9-b6498e032b67" >
+				<flow-ref doc:name="Flow-ref to mule-employees-xapi-main" doc:id="52fad386-d563-4429-8711-d85baf59004f" name="mule-employees-xapi-main" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="e911502c-afc6-4504-a165-f46e5f4a5b84" >
+						<logger level="INFO" doc:name="Logger" doc:id="c5d0a47d-949c-4860-98af-de593c8b7014" message="Error happened"/>
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="8c7e4655-6a22-4478-88df-699cf889e774" actual="#[payload.message]" expected='#["Method not allowed"]' message="The payload message is invalid"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="mule-employees-xapi-test-suite-mule-employees-xapi-not-acceptable-mainTest" doc:id="f3830db3-af41-4d56-9f8e-57a276904b36" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="5a03759d-9502-4974-93ac-8e1d3f3a47bf" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="mule-employees-xapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:NOT_ACCEPTABLE" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<try doc:name="Try" doc:id="00c2d949-e08c-4216-bf59-3ca74cca4c87" >
+				<flow-ref doc:name="Flow-ref to mule-employees-xapi-main" doc:id="57df21e0-145e-46b1-94d8-97bf7efe3c7a" name="mule-employees-xapi-main" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="a859cfa8-449f-4510-b8d7-c486c0a67a19" >
+						<logger level="INFO" doc:name="Logger" doc:id="13d6c2ee-b980-4cf1-82c9-a30c6166e9a6" message="Error happened"/>
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="3347b71f-c7dd-40b4-b988-c2b46071ad7c" actual="#[payload.message]" expected='#["Not acceptable"]' message="The payload message is invalid"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="mule-employees-xapi-test-suite-mule-employees-xapi-unsupported-mediatype-mainTest" doc:id="340371dd-16d8-44ef-9bc8-fa15995e34e2" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="3cbb4131-a8cf-4b11-a32a-e98dffcad2d1" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="mule-employees-xapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:UNSUPPORTED_MEDIA_TYPE" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<try doc:name="Try" doc:id="9688ace7-5505-46a7-8794-0b5231ab8b2d" >
+				<flow-ref doc:name="Flow-ref to mule-employees-xapi-main" doc:id="cf6abd8d-06ad-4c31-aa22-26871cf1aa92" name="mule-employees-xapi-main" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="72822e84-bf89-4de2-8576-90e782dad1f7" >
+						<logger level="INFO" doc:name="Logger" doc:id="fa4a26da-ba04-4132-9bdf-4af8ca4442df" message="Error happened"/>
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="f14e02df-696d-47e9-bdd0-7c75e29e63f4" actual="#[payload.message]" expected='#["Unsupported media type"]' message="The payload message is invalid"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="mule-employees-xapi-test-suite-mule-employees-xapi-not-implemented-mainTest" doc:id="c756292a-7ca9-45cf-ad84-610762d28af4" description="Test">
+		<munit:behavior >
+			<munit-tools:mock-when doc:name="Mock when" doc:id="ee9c8970-3baf-4b5b-84f0-48b22ba7fe7f" processor="apikit:router">
+				<munit-tools:with-attributes >
+					<munit-tools:with-attribute whereValue="mule-employees-xapi-config" attributeName="config-ref" />
+				</munit-tools:with-attributes>
+				<munit-tools:then-return >
+					<munit-tools:error typeId="APIKIT:NOT_IMPLEMENTED" />
+				</munit-tools:then-return>
+			</munit-tools:mock-when>
+		</munit:behavior>
+		<munit:execution>
+			<try doc:name="Try" doc:id="8d4069fb-6a46-43f5-8fc5-d3e491ffd310" >
+				<flow-ref doc:name="Flow-ref to mule-employees-xapi-main" doc:id="e0074631-f95a-42f0-8bc0-e43360d572b3" name="mule-employees-xapi-main" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="df985482-174c-4277-8c32-0fa29a711ff8" >
+						<logger level="INFO" doc:name="Logger" doc:id="8d072dbc-26bb-437e-84e2-e2b07ef37514" message="Error happened"/>
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+		<munit:validation>
+			<munit-tools:assert-equals doc:name="Assert equals" doc:id="e3da4f61-ed3d-44f4-8dc0-a31e048cfe66" actual="#[payload.message]" expected='#["Not Implemented"]' message="The payload message is invalid"/>
+		</munit:validation>
+	</munit:test>
+	<munit:test name="mule-employees-xapi-test-suite-get:\reflector:mule-employees-xapi-configTest" doc:id="7b4e4c2a-d106-4210-ab17-70bb6492d732" description="Test">
+		<munit:execution >
+			<flow-ref doc:name="Flow-ref to get:\reflector:mule-employees-xapi-config" doc:id="531f1520-5df2-4161-b3c5-e402358fe246" name="get:\reflector:mule-employees-xapi-config"/>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="mule-employees-xapi-test-suite-get:\token:mule-employees-xapi-configTest" doc:id="62c31e9b-ce8e-46fc-a3c1-455c8169e094" description="Test">
+		<munit:execution>
+			<try doc:name="Try" doc:id="05ef2aa9-ef82-4df3-b88e-962e551727bf" >
+				<flow-ref doc:name="Flow-ref to get:\token:mule-employees-xapi-config" doc:id="dc43eb2d-02f6-4bda-81c8-81b8749b13c7" name="get:\token:mule-employees-xapi-config" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="254a8b5b-e4e5-4832-812b-1f1d32591f00" >
+						<logger level="INFO" doc:name="Logger" doc:id="aa0b3885-3b06-4a04-91b5-dee039366d5f" message="Supress the error"/>
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="mule-employees-xapi-test-suite-post:\token:application\json:mule-employees-xapi-configTest" doc:id="63d0791b-2d9a-4f57-9661-9bf15e9dd7c8" description="Test">
+		<munit:execution>
+			<try doc:name="Try" doc:id="c5317eb2-6f47-4980-841f-9fe63ad21ed7" >
+				<flow-ref doc:name="Flow-ref to post:\token:application\json:mule-employees-xapi-config" doc:id="0f93c3be-d3f4-4b21-97fb-9797c2f3f43b" name="post:\token:application\json:mule-employees-xapi-config" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="482569ba-b3a6-4c96-8d2a-585d72f0c57d" >
+						<logger level="INFO" doc:name="Logger" doc:id="b783d5b3-0463-46f1-930e-7619b6486aed" message="Supress the error" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+	</munit:test>
+	<munit:test name="mule-employees-xapi-test-suite-post:\token:application\x-www-form-urlencoded:mule-employees-xapi-configTest" doc:id="69dc8157-9859-4ee9-aaff-23243fa797c0" description="Test">
+		<munit:execution>
+			<try doc:name="Try" doc:id="93819a21-f166-484a-8ba6-b927209419c1" >
+				<flow-ref doc:name="Flow-ref to post:\token:application\x-www-form-urlencoded:mule-employees-xapi-config" doc:id="e28b5bc4-aa8d-4413-8d9f-68f7fdf70676" name="post:\token:application\x-www-form-urlencoded:mule-employees-xapi-config" />
+				<error-handler >
+					<on-error-continue enableNotifications="true" logException="true" doc:name="On Error Continue" doc:id="70f4004d-8d2f-4f4d-9476-37276135203b" >
+						<logger level="INFO" doc:name="Logger" doc:id="5ce49e48-bbbd-4845-bf1d-9751fb600f75" message="Supress the error" />
+					</on-error-continue>
+				</error-handler>
+			</try>
+		</munit:execution>
+	</munit:test>
+</mule>

@@ -1,0 +1,46 @@
+# Multi-Environment Azure DevOps Pipeline for Mule application repositories
+# Place this in the root of the application repository as 'azure-pipelines.yml'
+#
+# Branch Gating:
+#   - Merging/pushing to 'dev': Auto-triggers full pipeline (Build → Dev → QA → UAT → Prod)
+#   - Pushing to any feature branch: Auto-triggers Build + Deploy to Dev/Sandbox only
+#   - 'main' branch: Does NOT trigger the pipeline
+trigger:
+  branches:
+    include:
+      - dev
+    exclude:
+      - main
+  paths:
+    exclude:
+      - README.md
+      - .gitignore
+
+pr:
+  branches:
+    include:
+      - dev
+  paths:
+    exclude:
+      - README.md
+      - .gitignore
+
+resources:
+  repositories:
+    - repository: templates
+      type: github
+      name: "amit21kv/mulesoft-cicd-main"   # GitHubOrg/RepositoryName
+      endpoint: "GitHubServiceConnection"   # Name of the Service Connection in Azure DevOps
+      ref: refs/heads/main
+
+# 1. Common Variables across ALL environments (can be overridden by stage-specific variables or YAML files)
+#variables:
+  #- name: "MULE_PROP_common__timeout"
+  #  value: "30000"
+  #- name: "MULE_PROP_common__domain"
+  #  value: "mycompany.com"
+
+
+stages:
+  #- template: pipelines/mule-cicd-template-windows.yml@templates   # use if the CICD pipeline uses windows VM
+  - template: pipelines/mule-cicd-template.yml@templates

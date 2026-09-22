@@ -1,0 +1,67 @@
+# Minimal CI/CD Environment Configuration File
+# Save as 'cicd-config-dev.yaml' in the Mule application repository
+
+# CloudHub 2.0 Deployment settings
+deployment:
+  applicationName: "mule-employees-xapi-v1u1"
+  # Target space (Shared/Private Space name). Set to "auto" or omit to dynamically 
+  # query and select the available target from your Anypoint Connection.
+  target: "auto"
+  vCores: "0.1"                          # Worker Size (e.g., 0.1, 0.2, 0.5, 1.0, etc.)
+  replicas: 1                            # Number of replicas (instances)
+  muleVersion: "4.9.18"                   # Target Mule Runtime version
+  deploymentSettings:
+    generateDefaultPublicUrl: "true"     #Optional
+    #publicUrl: ""                        # Provide vanity domain here. If public url is not required, leave it as empty string or comment it
+    clustered: "false"                   # This can be made true only if replicas are more than 1. Preferred while working with schedulers.
+    objectStoreV2: "false"                # Make it true only if application uses object-store.
+    http:
+      inbound:
+        lastMileSecurity: "false"           # Enable this only if you have configured a private space and have last mile security configured.
+
+# API Manager Instance Configuration
+apiManager:
+  # Optional: Set enabled to false for applications that do not use API Manager (e.g. MQ listeners, schedulers)
+  # When false, the script will skip API Manager queries, creation, policies, and autodiscovery properties injection.
+  enabled: true
+  assetId: "mule-employees-xapi-spec"                 # Asset ID in Exchange
+  #approvalMethod: automatic   # optional, defaults to "manual"
+  #endpointType: raml           # optional, defaults to "raml" (also accepts "wsdl", "http")
+  # Version of the API Asset in Exchange. Set to "latest" or leave empty to dynamically
+  # retrieve the latest version from Exchange.
+  assetVersion: "latest"
+  productVersion: "v1"                   # API Product Version in API Manager
+  instanceLabel: "Mule Employees API"    # (Required) Unique label to identify this API instance in API Manager
+  # Optional: consumerEndpoint represents the public endpoint exposed to API clients
+  consumerEndpoint: "https://api-dev.mycompany.com/mule-sample-api/v1"
+  
+  # List of policies to apply to this API instance
+  policies:
+    - name: "client-id-enforcement"
+      configuration:
+        credentialsOriginHasHttpBasicAuthenticationHeader: "customExpression"
+        clientIdExpression: "#[attributes.headers['client_id']]"
+        clientSecretExpression: "#[attributes.headers['client_secret']]"
+    # You can add more policies below (e.g. rate-limiting, ip-allowlist, etc.)
+    # - name: "rate-limiting-by-api-consumer"
+    #   configuration:
+    #     limits:
+    #       - value: 100
+    #         timePeriodInMilliseconds: 60000
+    #     clusterizable: true
+
+# Application Runtime Properties (System Properties/Env Vars in CloudHub 2.0)
+# Note: Properties set to null or omitted will fall back to pipeline variables (in azure-pipelines.yml)
+# or variable group values (e.g. DB_PORT -> db.port).
+properties:
+  mule.env: "dev"
+  db.host: "dev-db.mycompany.com"
+  db.port: null                          # Omitted/null value falls back to pipeline variable DB_PORT
+  db.username: "app_user_dev"
+
+# Secure Runtime Properties (Encrypted/hidden in Runtime Manager UI)
+# Sensitive properties should use $ENV_VAR placeholders which are resolved
+# at runtime from Variable Groups (e.g. DB_PASSWORD -> db.password).
+secureProperties:
+  db.password: "${DB_PASSWORD}"          # Resolved from pipeline secrets
+  mule.key: "${MULE_KEY}"                # Decryption key resolved from environment variable group
